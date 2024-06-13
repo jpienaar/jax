@@ -211,7 +211,7 @@ def split_spectrum(H, n, split_point, V0=None):
   """
   N, _ = H.shape
   H_shift = H - (split_point * jnp.eye(N, dtype=split_point.dtype)).astype(H.dtype)
-  U, _, _, _ = qdwh.qdwh(H_shift, is_hermitian=True, dynamic_shape=(n, n))
+  U, _, _, _ = qdwh.qdwh(H_shift, dynamic_shape=(n, n))
   I = _mask(jnp.eye(N, dtype=H.dtype), (n, n))
   P_minus = -0.5 * (U - I)
   rank_minus = jnp.round(jnp.trace(ufuncs.real(P_minus))).astype(jnp.int32)

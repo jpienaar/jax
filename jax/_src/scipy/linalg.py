@@ -1711,10 +1711,10 @@ def polar(a: ArrayLike, side: str = 'right', *, method: str = 'qdwh', eps: float
   if method == "qdwh":
     # TODO(phawkins): return info also if the user opts in?
     if m >= n and side == "right":
-      unitary, posdef, _, _ = qdwh.qdwh(arr, is_hermitian=False, eps=eps)
+      unitary, posdef, _, _ = qdwh.qdwh(arr, eps=eps)
     elif m < n and side == "left":
       arr = arr.T.conj()
-      unitary, posdef, _, _ = qdwh.qdwh(arr, is_hermitian=False, eps=eps)
+      unitary, posdef, _, _ = qdwh.qdwh(arr, eps=eps)
       posdef = posdef.T.conj()
       unitary = unitary.T.conj()
     else:

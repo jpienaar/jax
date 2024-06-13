@@ -64,11 +64,10 @@ class QdwhTest(jtu.JaxTestCase):
     self._testUnitary(u, tol)
     self._testHermitian(h, tol)
 
-  def _testQdwh(self, a, is_hermitian=False):
+  def _testQdwh(self, a):
     """Computes the polar decomposition and tests its basic properties."""
     eps = jnp.finfo(a.dtype).eps
-
-    u, h, iters, conv = qdwh.qdwh(a, is_hermitian=is_hermitian)
+    u, h, iters, conv = qdwh.qdwh(a)
     tol = 10 * eps
     self._testPolarDecomposition(a, u, h, tol=tol)
 
@@ -86,10 +85,9 @@ class QdwhTest(jtu.JaxTestCase):
   @jtu.sample_product(
       shape=[(8, 6), (10, 10), (20, 18), (300, 300)],
       log_cond=np.linspace(0, 1, 4),
-      hermitian=[True, False],
       dtype=float_types + complex_types,
   )
-  def testQdwhWithRandomMatrix(self, shape, log_cond, hermitian, dtype):
+  def testQdwhWithRandomMatrix(self, shape, log_cond, dtype):
     """Tests qdwh with upper triangular input of all ones."""
     eps = jnp.finfo(dtype).eps
     m, n = shape
@@ -103,10 +101,7 @@ class QdwhTest(jtu.JaxTestCase):
     u, _, v = jnp.linalg.svd(a, full_matrices=False)
     s = jnp.expand_dims(jnp.linspace(cond, 1, min(m, n)), range(u.ndim - 1))
     a = (u * s.astype(u.dtype)) @ v
-    hermitian = hermitian & (m == n)
-    if hermitian:
-      a = (a + a.conj().T) / 2
-    self._testQdwh(a, is_hermitian=hermitian)
+    self._testQdwh(a)
 
   @jtu.sample_product(
       [dict(m=m, n=n) for m, n in [(6, 6), (8, 4)]],
