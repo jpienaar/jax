@@ -9,6 +9,7 @@ Classes
 .. currentmodule:: jax.stages
 
 .. autoclass:: Wrapped
+   :members: trace
    :members: lower
    :special-members: __call__
 
